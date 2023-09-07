@@ -154,7 +154,9 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
 #else
     left_widget->addWidget(new DriveStats);
 #endif
+#if 0 //FreightMiner
     left_widget->addWidget(new PrimeAdWidget);
+#endif //FreightMiner
     left_widget->setStyleSheet("border-radius: 10px;");
 
     left_widget->setCurrentIndex(uiState()->hasPrime() ? 0 : 1);

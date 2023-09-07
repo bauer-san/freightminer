@@ -101,7 +101,11 @@ void Sidebar::updateState(const UIState &s) {
 
   ItemStatus pandaStatus = {{tr("VEHICLE"), tr("ONLINE")}, good_color};
   if (s.scene.pandaType == cereal::PandaState::PandaType::UNKNOWN) {
+#if 0 //FreightMiner	  
     pandaStatus = {{tr("NO"), tr("PANDA")}, danger_color};
+#else
+    pandaStatus = {{tr("NO"), tr("CAN Ifc")}, danger_color};
+#endif //FreightMiner	
   } else if (s.scene.started && !sm["liveLocationKalman"].getLiveLocationKalman().getGpsOK()) {
     pandaStatus = {{tr("GPS"), tr("SEARCH")}, warning_color};
   }

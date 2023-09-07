@@ -225,8 +225,10 @@ SetupWidget::SetupWidget(QWidget* parent) : QFrame(parent) {
   content_layout->setContentsMargins(0, 0, 0, 0);
   content_layout->setSpacing(30);
 
+#if 0 //FreightMiner
   primeUser = new PrimeUserWidget;
   content_layout->addWidget(primeUser);
+#endif //FreightMiner
 
   WiFiPromptWidget *wifi_prompt = new WiFiPromptWidget;
   QObject::connect(wifi_prompt, &WiFiPromptWidget::openSettings, this, &SetupWidget::openSettings);
@@ -235,7 +237,7 @@ SetupWidget::SetupWidget(QWidget* parent) : QFrame(parent) {
 
   mainLayout->addWidget(content);
 
-  primeUser->setVisible(uiState()->primeType());
+  //primeUser->setVisible(uiState()->primeType());
   mainLayout->setCurrentIndex(1);
 
   setStyleSheet(R"(

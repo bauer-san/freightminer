@@ -25,7 +25,11 @@ QString getVersion() {
 }
 
 QString getBrand() {
+#if 0 //FreightMiner	
   return Params().getBool("Passive") ? QObject::tr("dashcam") : QObject::tr("openpilot");
+#else
+  return Params().getBool("Passive") ? QObject::tr("dashcam") : QObject::tr("FreightMiner");
+#endif
 }
 
 QString getUserAgent() {

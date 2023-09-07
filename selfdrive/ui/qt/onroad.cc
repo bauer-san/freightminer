@@ -148,7 +148,9 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
 void OnroadAlerts::updateAlert(const Alert &a) {
   if (!alert.equal(a)) {
     alert = a;
+#if 0 // FreightMiner	
     update();
+#endif	
   }
 }
 
@@ -214,7 +216,8 @@ ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(fals
   setFixedSize(btn_size, btn_size);
 
   params = Params();
-  engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
+  //engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
+  engage_img = loadPixmap("../assets/img_spinner_comma.png", {img_size, img_size}); // FreightMiner
   experimental_img = loadPixmap("../assets/img_experimental.svg", {img_size, img_size});
   QObject::connect(this, &QPushButton::clicked, this, &ExperimentalButton::changeMode);
 }
@@ -239,7 +242,8 @@ void ExperimentalButton::updateState(const UIState &s) {
 
 void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPainter p(this);
-  QPixmap img = experimental_mode ? experimental_img : engage_img;
+  //QPixmap img = experimental_mode ? experimental_img : engage_img; // FreightMiner
+  QPixmap img = engage_img;
   drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
 }
 
@@ -355,6 +359,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   if (has_us_speed_limit) set_speed_size.rheight() += us_sign_height + sign_margin;
   else if (has_eu_speed_limit) set_speed_size.rheight() += eu_sign_size + sign_margin;
 
+#if 0 //FreightMiner
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
@@ -417,6 +422,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(blackColor());
     p.drawText(sign_rect, Qt::AlignCenter, speedLimitStr);
   }
+#endif //FreightMiner
 
   // current speed
   p.setFont(InterFont(176, QFont::Bold));
@@ -676,11 +682,13 @@ void AnnotatedCameraWidget::paintGL() {
     }
   }
 
+#if 0 //FreightMiner
   // DMoji
   if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
     update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
     drawDriverState(painter, s);
   }
+#endif //FreightMiner
 
   drawHud(painter);
 
@@ -704,4 +712,5 @@ void AnnotatedCameraWidget::showEvent(QShowEvent *event) {
 
   ui_update_params(uiState());
   prev_draw_t = millis_since_boot();
+
 }
