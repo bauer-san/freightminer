@@ -155,7 +155,7 @@ void OnroadAlerts::updateAlert(const Alert &a) {
 }
 
 void OnroadAlerts::paintEvent(QPaintEvent *event) {
-  if (alert.size == cereal::ControlsState::AlertSize::NONE) {
+  if (1 || (alert.size == cereal::ControlsState::AlertSize::NONE)) { // #FreightMiner
     return;
   }
   static std::map<cereal::ControlsState::AlertSize, const int> alert_heights = {

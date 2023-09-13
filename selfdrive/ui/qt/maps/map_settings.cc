@@ -23,7 +23,7 @@ static qint64 convertTimestampToEpoch(const QString &timestamp) {
 MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
   setContentsMargins(0, 0, 0, 0);
   setAttribute(Qt::WA_NoMousePropagation);
-
+		
   auto *frame = new QVBoxLayout(this);
   frame->setContentsMargins(40, 40, 40, 0);
   frame->setSpacing(0);
@@ -31,6 +31,7 @@ MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
   auto *heading_frame = new QHBoxLayout;
   heading_frame->setContentsMargins(0, 0, 0, 0);
   heading_frame->setSpacing(32);
+
   {
     if (closeable) {
       auto *close_btn = new QPushButton("←");
@@ -51,32 +52,40 @@ MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
       close_btn->setFixedSize(140, 140);
       QObject::connect(close_btn, &QPushButton::clicked, [=]() { emit closeSettings(); });
       // TODO: read map_on_left from ui state
+#if 0 //FreightMiner
       heading_frame->addWidget(close_btn);
+#endif  //FreightMiner
     }
 
     auto *heading = new QVBoxLayout;
     heading->setContentsMargins(0, 0, 0, 0);
     heading->setSpacing(16);
     {
+#if 0 //FreightMiner		
       auto *title = new QLabel(tr("NAVIGATION"), this);
       title->setStyleSheet("color: #FFFFFF; font-size: 54px; font-weight: 600;");
       heading->addWidget(title);
-
+#endif //FreightMiner	  
 #if 0 //FreightMiner
       auto *subtitle = new QLabel(tr("Manage at connect.comma.ai"), this);
       subtitle->setStyleSheet("color: #A0A0A0; font-size: 40px; font-weight: 300;");
       heading->addWidget(subtitle);
 #endif //FreightMiner	  
     }
+#if 0 //FreightMiner
     heading_frame->addLayout(heading, 1);
+#endif //FreightMiner	
   }
+#if 0 //FreightMiner
   frame->addLayout(heading_frame);
   frame->addSpacing(32);
-
+#endif //FreightMiner
   current_widget = new DestinationWidget(this);
   QObject::connect(current_widget, &DestinationWidget::actionClicked,
                    []() { NavManager::instance()->setCurrentDestination({}); });
+#if 0 //FreightMiner
   frame->addWidget(current_widget);
+#endif //FreightMiner  
   frame->addSpacing(32);
 
   QWidget *destinations_container = new QWidget(this);
@@ -91,9 +100,10 @@ MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
 
   ScrollView *destinations_scroller = new ScrollView(destinations_container, this);
   destinations_scroller->setFrameShape(QFrame::NoFrame);
+#if 0 //FreightMiner
   frame->addWidget(destinations_scroller);
-
-  setStyleSheet("MapSettings { background-color: #333333; }");
+#endif //FreightMiner
+  setStyleSheet("MapSettings { background-color: #000000; }"); // Freightminer was #333333
   QObject::connect(NavManager::instance(), &NavManager::updated, this, &MapSettings::refresh);
 }
 
@@ -158,8 +168,9 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
   icon->setAlignment(Qt::AlignCenter);
   icon->setFixedSize(96, 96);
   icon->setObjectName("icon");
+#if 0 //FreightMiner
   frame->addWidget(icon);
-
+#endif //FreightMiner
   auto *inner_frame = new QVBoxLayout;
   inner_frame->setContentsMargins(0, 0, 0, 0);
   inner_frame->setSpacing(0);
@@ -173,14 +184,16 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
     subtitle->setObjectName("subtitle");
     inner_frame->addWidget(subtitle);
   }
+#if 0 //FreightMiner  
   frame->addLayout(inner_frame, 1);
-
+#endif //FreightMiner
   action = new QPushButton(this);
   action->setFixedSize(96, 96);
   action->setObjectName("action");
   action->setStyleSheet("font-size: 65px; font-weight: 600;");
   QObject::connect(action, &QPushButton::clicked, this, &QPushButton::clicked);
   QObject::connect(action, &QPushButton::clicked, this,  &DestinationWidget::actionClicked);
+#if 0 // FreightMiner	
   frame->addWidget(action);
 
   setFixedHeight(164);
@@ -206,6 +219,7 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
     [current="false"]:pressed { background-color: #18191B; }
     [current="true"] #action:pressed { background-color: #D6D6D6; }
   )");
+#endif // FreightMiner	  
   QObject::connect(this, &QPushButton::clicked, [this]() { if (!dest.isEmpty()) emit navigateTo(dest); });
 }
 
@@ -235,7 +249,6 @@ void DestinationWidget::set(const QJsonObject &destination, bool current) {
   }
 
   icon->setPixmap(icon_pixmap);
-
   title->setText(title_text);
   subtitle->setText(subtitle_text);
   subtitle->setVisible(true);
@@ -252,7 +265,7 @@ void DestinationWidget::unset(const QString &label, bool current) {
   dest = {};
   setProperty("current", current);
   setProperty("set", false);
-
+#if 0 // FreightMiner
   if (label.isEmpty()) {
     icon->setPixmap(icons().directions);
     title->setText(tr("No destination set"));
@@ -261,7 +274,7 @@ void DestinationWidget::unset(const QString &label, bool current) {
     icon->setPixmap(label == NAV_FAVORITE_LABEL_HOME ? icons().home : icons().work);
     title->setText(tr("No %1 location set").arg(title_text));
   }
-
+#endif // FreightMiner	
   subtitle->setVisible(false);
   action->setVisible(false);
 

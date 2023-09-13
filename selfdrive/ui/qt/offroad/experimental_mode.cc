@@ -9,7 +9,8 @@
 #include "selfdrive/ui/ui.h"
 
 ExperimentalModeButton::ExperimentalModeButton(QWidget *parent) : QPushButton(parent) {
-  chill_pixmap = QPixmap("../assets/img_couch.svg").scaledToWidth(img_width, Qt::SmoothTransformation);
+  //chill_pixmap = QPixmap("../assets/img_couch.svg").scaledToWidth(img_width, Qt::SmoothTransformation);
+  chill_pixmap = QPixmap("../assets/img_chffr_wheel.png").scaledToWidth(img_width, Qt::SmoothTransformation);
   experimental_pixmap = QPixmap("../assets/img_experimental_grey.svg").scaledToWidth(img_width, Qt::SmoothTransformation);
 
   // go to toggles and expand experimental mode description
@@ -61,16 +62,23 @@ void ExperimentalModeButton::paintEvent(QPaintEvent *event) {
     gradient.setColorAt(0, QColor(20, 255, 171, pressed ? 0xcc : 0xff));
     gradient.setColorAt(1, QColor(35, 149, 255, pressed ? 0xcc : 0xff));
   }
+#if 0 //FreightMiner
   p.fillPath(path, gradient);
-
+#endif //FreightMiner
   // vertical line
   p.setPen(QPen(QColor(0, 0, 0, 0x4d), 3, Qt::SolidLine));
+#if 0 //FreightMiner
   int line_x = rect().right() - img_width - (2 * horizontal_padding);
   p.drawLine(line_x, rect().bottom(), line_x, rect().top());
+#endif //FreightMiner  
 }
 
 void ExperimentalModeButton::showEvent(QShowEvent *event) {
   experimental_mode = params.getBool("ExperimentalMode");
+#if 0 //FreightMiner
   mode_icon->setPixmap(experimental_mode ? experimental_pixmap : chill_pixmap);
   mode_label->setText(experimental_mode ? tr("EXPERIMENTAL MODE ON") : tr("CHILL MODE ON"));
+#else
+  mode_icon->setPixmap(chill_pixmap);
+#endif  
 }

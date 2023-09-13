@@ -13,6 +13,7 @@ WiFiPromptWidget::WiFiPromptWidget(QWidget *parent) : QFrame(parent) {
   QVBoxLayout *setup_layout = new QVBoxLayout(setup);
   setup_layout->setContentsMargins(56, 40, 56, 40);
   setup_layout->setSpacing(20);
+#if 0 //FreightMiner
   {
     QHBoxLayout *title_layout = new QHBoxLayout;
     title_layout->setSpacing(32);
@@ -48,15 +49,20 @@ WiFiPromptWidget::WiFiPromptWidget(QWidget *parent) : QFrame(parent) {
         background-color: #3049F4;
       }
     )");
+#if 0 //FreightMiner	
     setup_layout->addWidget(settings_btn);
+#endif //FreightMiner	
   }
+#endif //FreightMiner
+#if 0 //FreightMiner
   stack->addWidget(setup);
-
+#endif //FreightMiner
   // Uploading data
   QWidget *uploading = new QWidget;
   QVBoxLayout *uploading_layout = new QVBoxLayout(uploading);
   uploading_layout->setContentsMargins(64, 56, 64, 56);
   uploading_layout->setSpacing(36);
+#if 0 //FreightMiner
   {
     QHBoxLayout *title_layout = new QHBoxLayout;
     {
@@ -79,11 +85,13 @@ WiFiPromptWidget::WiFiPromptWidget(QWidget *parent) : QFrame(parent) {
     desc->setWordWrap(true);
     uploading_layout->addWidget(desc);
   }
+#endif //FreightMiner
+#if 0 //FreightMiner
   stack->addWidget(uploading);
-
+#endif //FreightMiner
   setStyleSheet(R"(
     WiFiPromptWidget {
-      background-color: #333333;
+      background-color: #000000;
       border-radius: 10px;
     }
   )");

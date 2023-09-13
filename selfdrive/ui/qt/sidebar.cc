@@ -6,7 +6,7 @@
 
 void Sidebar::drawMetric(QPainter &p, const QPair<QString, QString> &label, QColor c, int y) {
   const QRect rect = {30, y, 240, 126};
-
+#if 0 // FreightMiner	
   p.setPen(Qt::NoPen);
   p.setBrush(QBrush(c));
   p.setClipRect(rect.x() + 4, rect.y(), 18, rect.height(), Qt::ClipOperation::ReplaceClip);
@@ -22,6 +22,7 @@ void Sidebar::drawMetric(QPainter &p, const QPair<QString, QString> &label, QCol
   p.setPen(QColor(0xff, 0xff, 0xff));
   p.setFont(InterFont(35, QFont::DemiBold));
   p.drawText(rect.adjusted(22, 0, 0, 0), Qt::AlignCenter, label.first + "\n" + label.second);
+#endif // FreightMiner	  
 }
 
 Sidebar::Sidebar(QWidget *parent) : QFrame(parent), onroad(false), flag_pressed(false), settings_pressed(false) {
@@ -88,7 +89,7 @@ void Sidebar::updateState(const UIState &s) {
                         ? ItemStatus{{tr("CONNECT"), tr("ONLINE")}, good_color}
                         : ItemStatus{{tr("CONNECT"), tr("ERROR")}, danger_color};
   }
-  setProperty("connectStatus", QVariant::fromValue(connectStatus));
+//  setProperty("connectStatus", QVariant::fromValue(connectStatus));
 
   ItemStatus tempStatus = {{tr("TEMP"), tr("HIGH")}, danger_color};
   auto ts = deviceState.getThermalStatus();
@@ -97,7 +98,7 @@ void Sidebar::updateState(const UIState &s) {
   } else if (ts == cereal::DeviceState::ThermalStatus::YELLOW) {
     tempStatus = {{tr("TEMP"), tr("OK")}, warning_color};
   }
-  setProperty("tempStatus", QVariant::fromValue(tempStatus));
+//  setProperty("tempStatus", QVariant::fromValue(tempStatus));
 
   ItemStatus pandaStatus = {{tr("VEHICLE"), tr("ONLINE")}, good_color};
   if (s.scene.pandaType == cereal::PandaState::PandaType::UNKNOWN) {
@@ -109,23 +110,25 @@ void Sidebar::updateState(const UIState &s) {
   } else if (s.scene.started && !sm["liveLocationKalman"].getLiveLocationKalman().getGpsOK()) {
     pandaStatus = {{tr("GPS"), tr("SEARCH")}, warning_color};
   }
-  setProperty("pandaStatus", QVariant::fromValue(pandaStatus));
+//  setProperty("pandaStatus", QVariant::fromValue(pandaStatus));
 }
 
 void Sidebar::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.setPen(Qt::NoPen);
   p.setRenderHint(QPainter::Antialiasing);
+  p.fillRect(rect(), QColor(0, 0, 0)); //FreightMiner QColor(57, 57, 57))
 
-  p.fillRect(rect(), QColor(57, 57, 57));
-
+#if 0 // FreightMiner	
   // buttons
   p.setOpacity(settings_pressed ? 0.65 : 1.0);
   p.drawPixmap(settings_btn.x(), settings_btn.y(), settings_img);
   p.setOpacity(onroad && flag_pressed ? 0.65 : 1.0);
   p.drawPixmap(home_btn.x(), home_btn.y(), onroad ? flag_img : home_img);
   p.setOpacity(1.0);
+#endif // FreightMiner	
 
+#if 0 // FreightMiner	
   // network
   int x = 58;
   const QColor gray(0x54, 0x54, 0x54);
@@ -134,7 +137,9 @@ void Sidebar::paintEvent(QPaintEvent *event) {
     p.drawEllipse(x, 196, 27, 27);
     x += 37;
   }
+#endif // FreightMiner	  
 
+#if 0 // FreightMiner	
   p.setFont(InterFont(35));
   p.setPen(QColor(0xff, 0xff, 0xff));
   const QRect r = QRect(50, 247, 100, 50);
@@ -144,4 +149,5 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   drawMetric(p, temp_status.first, temp_status.second, 338);
   drawMetric(p, panda_status.first, panda_status.second, 496);
   drawMetric(p, connect_status.first, connect_status.second, 654);
+#endif  
 }
