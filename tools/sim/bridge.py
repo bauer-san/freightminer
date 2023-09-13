@@ -25,7 +25,7 @@ from openpilot.selfdrive.test.helpers import set_params_enabled
 from openpilot.tools.sim.lib.can import can_function
 
 W, H = 1928, 1208
-REPEAT_COUNTER = 5
+REPEAT_COUNTER = 1
 PRINT_DECIMATION = 100
 STEER_RATIO = 15.
 
@@ -434,9 +434,11 @@ class CarlaBridge:
           if m[1] == "down":
             cruise_button = CruiseButtons.DECEL_SET
             is_openpilot_engaged = True
+            print("engaged speed: %.1f" % vehicle_state.speed)
           elif m[1] == "up":
             cruise_button = CruiseButtons.RES_ACCEL
             is_openpilot_engaged = True
+            print("engaged speed: %.1f" % vehicle_state.speed)
           elif m[1] == "cancel":
             cruise_button = CruiseButtons.CANCEL
             is_openpilot_engaged = False
@@ -445,7 +447,7 @@ class CarlaBridge:
         elif m[0] == "quit":
           break
 
-        throttle_out = throttle_manual * throttle_manual_multiplier
+        throttle_out = throttle_manual * throttle_manual_multiplier      	
         steer_out = steer_manual * steer_manual_multiplier
         brake_out = brake_manual * brake_manual_multiplier
 
@@ -469,6 +471,11 @@ class CarlaBridge:
         old_steer = steer_out
 
       else:
+        if (vehicle_state.speed > 1.0): #we assume kmh
+          if (vehicle_state.speed < 5.0): #we assume kmh
+            throttle_out = max(throttle_out, 10.) # 30*.7 and a little less
+            old_throttle = throttle_out
+
         if throttle_out == 0 and old_throttle > 0:
           if throttle_ease_out_counter > 0:
             throttle_out = old_throttle
