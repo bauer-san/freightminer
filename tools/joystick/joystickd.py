@@ -28,6 +28,10 @@ class Keyboard:
       self.axes_values = {ax: 0. for ax in self.axes_values}
     elif key == 'c':
       self.cancel = True
+    elif key == '1':
+      self.teleop_mode = True
+    elif key == '2':
+      self.teleop_mode = False
     elif key in self.axes_map:
       axis = self.axes_map[key]
       incr = self.axis_increment if key in ['w', 'a'] else -self.axis_increment
@@ -47,12 +51,16 @@ class Joystick:
     else:
       self.cancel_button = 'BTN_TRIGGER'
       accel_axis = 'ABS_Y'
-      steer_axis = 'ABS_RX'
+      steer_axis = 'ABS_RZ'
+    self.teleop_engage = 'BTN_TL'
+    self.teleop_disengage = 'BTN_TR'
+
     self.min_axis_value = {accel_axis: 0., steer_axis: 0.}
     self.max_axis_value = {accel_axis: 255., steer_axis: 255.}
     self.axes_values = {accel_axis: 0., steer_axis: 0.}
     self.axes_order = [accel_axis, steer_axis]
     self.cancel = False
+    self.teleop_mode = False
 
   def update(self):
     joystick_event = get_gamepad()[0]
@@ -68,6 +76,10 @@ class Joystick:
 
       norm = -interp(event[1], [self.min_axis_value[event[0]], self.max_axis_value[event[0]]], [-1., 1.])
       self.axes_values[event[0]] = norm if abs(norm) > 0.05 else 0.  # center can be noisy, deadzone of 5%
+    elif event[0] == self.teleop_engage:
+      self.teleop_mode = True
+    elif event[0] == self.teleop_disengage:
+      self.teleop_mode = False      
     else:
       return False
     return True
@@ -79,8 +91,9 @@ def send_thread(joystick):
   while 1:
     dat = messaging.new_message('testJoystick')
     dat.testJoystick.axes = [joystick.axes_values[a] for a in joystick.axes_order]
-    dat.testJoystick.buttons = [joystick.cancel]
+    dat.testJoystick.buttons = [joystick.cancel, joystick.teleop_mode]
     joystick_sock.send(dat.to_bytes())
+
     print('\n' + ', '.join(f'{name}: {round(v, 3)}' for name, v in joystick.axes_values.items()))
     rk.keep_time()
 

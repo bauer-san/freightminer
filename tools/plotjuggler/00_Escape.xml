@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+ <tabbed_widget parent="main_window" name="Main Window">
+  <Tab containers="1" tab_name="Vehicle">
+   <Container>
+    <DockSplitter orientation="-" sizes="0.200234;0.200234;0.199063;0.200234;0.200234" count="5">
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#d62728" name="/carState/aEgo"/>
+       <curve color="#1ac938" name="/carState/vEgo"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#ff7f0e" name="/carState/steeringAngleDeg"/>
+       <curve color="#f14cc1" name="/carState/steeringAngleOffsetDeg"/>
+       <curve color="#9467bd" name="/carState/yawRate"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#17becf" name="/controlsState/alertSound"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#1f77b4" name="/carControl/cruiseControl/cancel"/>
+       <curve color="#d62728" name="/carControl/cruiseControl/override"/>
+       <curve color="#1ac938" name="/carControl/cruiseControl/resume"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#ff7f0e" name="/controlsState/__logMonoTime"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="Lateral MPC">
+   <Container>
+    <DockSplitter orientation="-" sizes="0.500583;0.499417" count="2">
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#1f77b4" name="/lateralPlan/solverCost"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#d62728" name="/lateralPlan/solverExecutionTime"/>
+       <curve color="#9467bd" name="/longitudinalPlan/solverExecutionTime"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="Camera">
+   <Container>
+    <DockSplitter orientation="-" sizes="0.500583;0.499417" count="2">
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Dots" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#1ac938" name="/roadCameraState/frameId"/>
+       <curve color="#ff7f0e" name="/wideRoadCameraState/frameId"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#1f77b4" name="/modelV2/frameDropPerc"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="Longitudinal Debug">
+   <Container>
+    <DockSplitter orientation="-" sizes="1" count="1">
+     <DockArea name="...">
+      <plot mode="TimeSeries" flip_x="false" style="Dots" flip_y="false">
+       <range top="0.100000" left="0.000000" bottom="-0.100000" right="0.000000"/>
+       <limitY/>
+       <curve color="#1f77b4" name="/carControl/longActive"/>
+       <curve color="#d62728" name="/carParams/openpilotLongitudinalControl"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="3"/>
+ </tabbed_widget>
+ <use_relative_time_offset enabled="1"/>
+ <!-- - - - - - - - - - - - - - - -->
+ <!-- - - - - - - - - - - - - - - -->
+ <Plugins>
+  <plugin ID="DataLoad Rlog"/>
+  <plugin ID="Cereal Subscriber"/>
+ </Plugins>
+ <!-- - - - - - - - - - - - - - - -->
+ <previouslyLoaded_Datafiles/>
+ <previouslyLoaded_Streamer name="Cereal Subscriber"/>
+ <!-- - - - - - - - - - - - - - - -->
+ <customMathEquations/>
+ <snippets/>
+ <!-- - - - - - - - - - - - - - - -->
+</root>
+

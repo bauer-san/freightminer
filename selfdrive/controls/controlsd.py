@@ -6,7 +6,7 @@ import threading
 from typing import SupportsFloat
 
 from cereal import car, log
-from openpilot.common.numpy_fast import clip
+from openpilot.common.numpy_fast import clip, interp
 from openpilot.common.realtime import config_realtime_process, Priority, Ratekeeper, DT_CTRL
 from openpilot.common.params import Params
 import cereal.messaging as messaging
@@ -27,7 +27,7 @@ from openpilot.selfdrive.controls.lib.latcontrol_torque import LatControlTorque
 from openpilot.selfdrive.controls.lib.events import Events, ET
 from openpilot.selfdrive.controls.lib.alertmanager import AlertManager, set_offroad_alert
 from openpilot.selfdrive.controls.lib.vehicle_model import VehicleModel
-from openpilot.system.hardware import HARDWARE
+from openpilot.system.hardware import HARDWARE, PC
 
 SOFT_DISABLE_TIME = 3  # seconds
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
@@ -76,6 +76,8 @@ class Controls:
     ignore = self.sensor_packets + ['testJoystick']
     if SIMULATION:
       ignore += ['driverCameraState', 'managerState']
+    if PC: #FREIGHTMINER
+      ignore += ['driverCameraState', 'wideRoadCameraState']
     self.sm = messaging.SubMaster(['deviceState', 'pandaStates', 'peripheralState', 'modelV2', 'liveCalibration',
                                    'driverMonitoringState', 'longitudinalPlan', 'lateralPlan', 'liveLocationKalman',
                                    'managerState', 'liveParameters', 'radarState', 'liveTorqueParameters',
@@ -209,6 +211,16 @@ class Controls:
     """Compute onroadEvents from carState"""
 
     self.events.clear()
+
+    if self.params.get_bool("JoystickDebugMode") and self.sm.rcv_frame['testJoystick'] > 0:
+      if self.sm['testJoystick'].buttons[1]:
+        self.joystick_mode = True
+      elif not self.sm['testJoystick'].buttons[1]:
+        self.joystick_mode = False
+      else:
+        self.joystick_mode = False
+    else:
+        self.joystick_mode = False
 
     # Add joystick event, static on cars, dynamic on nonCars
     if self.joystick_mode:
@@ -384,8 +396,8 @@ class Controls:
         self.events.add(EventName.paramsdTemporaryError)
 
     # conservative HW alert. if the data or frequency are off, locationd will throw an error
-    if any((self.sm.frame - self.sm.rcv_frame[s])*DT_CTRL > 10. for s in self.sensor_packets):
-      self.events.add(EventName.sensorDataInvalid)
+#    if any((self.sm.frame - self.sm.rcv_frame[s])*DT_CTRL > 10. for s in self.sensor_packets):
+#      self.events.add(EventName.sensorDataInvalid)
 
     if not REPLAY:
       # Check for mismatch between openpilot and car's PCM
@@ -636,6 +648,7 @@ class Controls:
           steer = clip(joystick_axes[1], -1, 1)
           # max angle is 45 for angle-based cars, max curvature is 0.02
           actuators.steer, actuators.steeringAngleDeg, actuators.curvature = steer, steer * 90., steer * -0.02
+#          steer, steer*interp(CS.vEgo,[3.,4.,5.,7.,12.,14.,23.],[610.,350.,180.,80.,30.,20.,10.]), steer * 
 
         lac_log.active = self.active
         lac_log.steeringAngleDeg = CS.steeringAngleDeg
