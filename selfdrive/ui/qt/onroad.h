@@ -94,6 +94,8 @@ private:
   int status = STATUS_DISENGAGED;
   std::unique_ptr<PubMaster> pm;
   bool wide_cam_requested = false;
+  bool isEnabled = false;
+  bool isTeleop = false;
 
 protected:
   void paintGL() override;
